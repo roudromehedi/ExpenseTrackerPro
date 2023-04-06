@@ -1,8 +1,8 @@
-const userModel = require("./userModel");
+const expenseModel = require("./expenseModel");
 
 exports.getDataFromDBService = async () => {
   try {
-    const result = await userModel.find({});
+    const result = await expenseModel.find({});
     return result;
   } catch (error) {
     throw error;
@@ -11,29 +11,20 @@ exports.getDataFromDBService = async () => {
 
 exports.createUserDBService = async (userDetails) => {
   try {
-    const userModelData = new userModel({
+    const expenseModelData = new expenseModel({
       userName: userDetails.userName,
       password: userDetails.password,
     });
-    await userModelData.save();
+    await expenseModelData.save();
     return true;
   } catch (error) {
-    throw error;
-  }
-};
-exports.findOne = async ({ userName, password }) => {
-  try {
-    const user = await userModel.findOne({ userName, password }).exec();
-    return user;
-  } catch (error) {
-    console.error(error);
     throw error;
   }
 };
 
 exports.updateUserDBService = async (id, userDetails) => {
   try {
-    const result = await userModel.findByIdAndUpdate(id, userDetails, {
+    const result = await expenseModel.findByIdAndUpdate(id, userDetails, {
       new: true,
     });
     return result;
@@ -44,7 +35,7 @@ exports.updateUserDBService = async (id, userDetails) => {
 
 exports.removeUserDBService = async (id) => {
   try {
-    const result = await userModel.findByIdAndDelete(id);
+    const result = await expenseModel.findByIdAndDelete(id);
     return result;
   } catch (error) {
     throw error;

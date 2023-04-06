@@ -3,13 +3,10 @@ var server = express();
 var routes = require("./routes/routes");
 var mongoose = require("mongoose");
 const cors = require("cors");
-mongoose.connect(
-  "mongodb+srv://roudro:Roudro%40114727@cluster0.eibxm4x.mongodb.net/est",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+mongoose.connect("mongodb://localhost:27017/est", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 // Get the default connection
 const db = mongoose.connection;

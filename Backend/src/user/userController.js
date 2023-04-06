@@ -1,12 +1,37 @@
-var userService = require("./userService");
+const userService = require("./userService");
 
-var getDataConntrollerfn = async (req, res) => {
-  var empolyee = await userService.getDataFromDBService();
-  res.send({ status: true, data: empolyee });
+const getDataControllerfn = async (req, res) => {
+  const employees = await userService.getDataFromDBService();
+  res.send({ status: true, data: employees });
 };
 
-var createUserControllerFn = async (req, res) => {
-  var status = await userService.createUserDBService(req.body);
+const loginUserControllerfn = async (req, res) => {
+  const { userName, password } = req.body;
+
+  try {
+    const user = await userService.findOne({ userName, password });
+
+    if (user) {
+      // Handle successful login
+      res.send({
+        status: true,
+        message: "Login successful",
+        userId: user.id,
+        userName: user.userName,
+      });
+    } else {
+      // Handle login error
+      res.send({ status: false, message: "Invalid email or password" });
+    }
+  } catch (error) {
+    // Handle database error
+    console.error(error);
+    res.send({ status: false, message: "Database error" });
+  }
+};
+
+const createUserControllerFn = async (req, res) => {
+  const status = await userService.createUserDBService(req.body);
   if (status) {
     res.send({ status: true, message: "User created successfully" });
   } else {
@@ -14,31 +39,33 @@ var createUserControllerFn = async (req, res) => {
   }
 };
 
-var updateUserController = async (req, res) => {
+const updateUserController = async (req, res) => {
   console.log(req.params.id);
   console.log(req.body);
 
-  var result = await userService.updateUserDBService(req.params.id, req.body);
+  const result = await userService.updateUserDBService(req.params.id, req.body);
 
   if (result) {
-    res.send({ status: true, message: "User Updateeeedddddd" });
+    res.send({ status: true, message: "User updated successfully" });
   } else {
-    res.send({ status: false, message: "User Updateeeedddddd Faileddddddd" });
+    res.send({ status: false, message: "Error updating user" });
   }
 };
 
-var deleteUserController = async (req, res) => {
+const deleteUserController = async (req, res) => {
   console.log(req.params.id);
-  var result = await userService.removeUserDBService(req.params.id);
+  const result = await userService.removeUserDBService(req.params.id);
   if (result) {
-    res.send({ status: true, message: "User Deleteddd" });
+    res.send({ status: true, message: "User deleted successfully" });
   } else {
-    res.send({ status: false, message: "User Deleteddd Faileddddddd" });
+    res.send({ status: false, message: "Error deleting user" });
   }
 };
+
 module.exports = {
-  getDataConntrollerfn,
+  getDataControllerfn,
   createUserControllerFn,
   updateUserController,
   deleteUserController,
+  loginUserControllerfn,
 };
