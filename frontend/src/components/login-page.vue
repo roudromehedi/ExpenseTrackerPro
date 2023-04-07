@@ -46,7 +46,11 @@ export default {
         // Redirect to the dashboard page
         this.$router.push({
           path: "/dashboard",
-          query: { userName: response.data.userName },
+          query: {
+            loggedInUser: response.data.userName,
+            loggedInUserId: response.data.userId,
+            loggedInUserExpenses: response.data.expenses,
+          },
         });
       } catch (error) {
         // Handle login error

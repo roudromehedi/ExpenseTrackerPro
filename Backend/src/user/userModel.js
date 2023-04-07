@@ -1,6 +1,17 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
+var expenseSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  amount: {
+    type: Number,
+    required: true,
+  },
+});
+
 var userSchema = new Schema({
   userName: {
     type: String,
@@ -10,6 +21,7 @@ var userSchema = new Schema({
     type: String,
     required: true,
   },
+  expenses: [expenseSchema],
 });
 
-module.exports = mongoose.model("login_data", userSchema);
+module.exports = mongoose.model("User", userSchema);

@@ -2,14 +2,18 @@
   <div>
     <v-card>
       <v-card-title class="headline"
-        >{{ loggedInUser }}'s Expense Tracker Dashboard</v-card-title
+        >{{ loggedInUser.loggedInUser }}'s Expense Tracker
+        Dashboard</v-card-title
       >
       <v-card-text>
         <!-- Form for adding new expenses -->
         <v-form>
-          <v-text-field v-model="newExpense.name" label="Name"></v-text-field>
           <v-text-field
-            v-model="newExpense.amount"
+            v-model="newExpense.expenseName"
+            label="Name"
+          ></v-text-field>
+          <v-text-field
+            v-model="newExpense.expenseAmount"
             label="Amount"
           ></v-text-field>
           <v-btn color="primary" @click="addExpense">Add Expense</v-btn>
@@ -28,28 +32,58 @@ export default {
       { text: "Name", value: "name" },
       { text: "Amount", value: "amount" },
     ],
-    expenses: [
-      { name: "Rent", amount: 1000 },
-      { name: "Groceries", amount: 200 },
-      { name: "Gas", amount: 50 },
-    ],
+    expenses: [],
     newExpense: {
-      name: "",
-      amount: "",
+      userId: "",
+      expenseName: "",
+      expenseAmount: "",
     },
     loggedInUser: "", // new data property
+    userId: "",
   }),
   methods: {
-    addExpense() {
-      // Add new expense to the expenses array
-      this.expenses.push({ ...this.newExpense });
-      // Clear form fields
-      this.newExpense.name = "";
-      this.newExpense.amount = "";
+    async addExpense() {
+      try {
+        // Make API call to add expense
+        const response = await fetch(
+          `http://localhost:8000/user/${this.userId}/addExpense`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              expenseName: this.newExpense.expenseName,
+              expenseAmount: this.newExpense.expenseAmount,
+              userId: this.userId,
+            }),
+          }
+        );
+
+        const result = await response.json();
+
+        if (result.status === true) {
+          // Add new expense to the expenses array
+          this.expenses.push({ ...this.newExpense });
+          // Clear form fields
+          this.newExpense.expenseName = "";
+          this.newExpense.expenseAmount = "";
+        } else {
+          alert(result.message);
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Error adding expense");
+      }
+      console.log(this.loggedInUser.userId);
     },
   },
   mounted() {
-    this.loggedInUser = this.$route.query.userName;
+    this.loggedInUser = this.$route.query;
+    this.userId = this.loggedInUser.loggedInUserId;
+    this.expenses = this.loggedInUser.loggedInUserExpenses;
+    console.log(this.expenses);
+    // Fetch user's expenses
   },
 };
 </script>

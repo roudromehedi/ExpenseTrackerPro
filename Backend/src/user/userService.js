@@ -21,6 +21,7 @@ exports.createUserDBService = async (userDetails) => {
     throw error;
   }
 };
+
 exports.findOne = async ({ userName, password }) => {
   try {
     const user = await userModel.findOne({ userName, password }).exec();
@@ -46,6 +47,39 @@ exports.removeUserDBService = async (id) => {
   try {
     const result = await userModel.findByIdAndDelete(id);
     return result;
+  } catch (error) {
+    throw error;
+  }
+};
+exports.addExpenseDBService = async (userId, expenseDetails) => {
+  try {
+    console.log("userId:", userId);
+    console.log("expenseDetails:", expenseDetails);
+    const result = await userModel.findByIdAndUpdate(
+      userId,
+      {
+        $push: {
+          expenses: {
+            name: expenseDetails.expenseName,
+            amount: expenseDetails.expenseAmount,
+          },
+        },
+      },
+      { new: true }
+    );
+    console.log("result:", result);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+exports.getExpensesDBService = async (userId) => {
+  try {
+    console.log("userId:", userId);
+    const user = await userModel.findById(userId);
+    console.log("Expenses", user.expenses);
+    return user.expenses;
   } catch (error) {
     throw error;
   }

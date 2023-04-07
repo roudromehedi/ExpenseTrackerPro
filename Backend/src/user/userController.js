@@ -16,8 +16,10 @@ const loginUserControllerfn = async (req, res) => {
       res.send({
         status: true,
         message: "Login successful",
-        userId: user.id,
+        userId: user._id,
         userName: user.userName,
+        password: user.password,
+        expenses: user.expenses,
       });
     } else {
       // Handle login error
@@ -61,6 +63,35 @@ const deleteUserController = async (req, res) => {
     res.send({ status: false, message: "Error deleting user" });
   }
 };
+const addExpenseController = async (req, res) => {
+  const { userId, expenseName, expenseAmount } = req.body;
+
+  // Check that the request body is not empty
+  if (!expenseName || !expenseAmount) {
+    return res.send({ status: false, message: "Missing required fields" });
+  }
+
+  try {
+    const result = await userService.addExpenseDBService(userId, {
+      expenseName: expenseName,
+      expenseAmount: expenseAmount,
+    });
+    res.send({
+      status: true,
+      message: "Expense added successfully",
+      data: result,
+    });
+    console.log(result);
+  } catch (error) {
+    console.error(error);
+    res.send({ status: false, message: "Error adding expense" });
+  }
+};
+
+const getExpensesController = async (req, res) => {
+  const expenses = await userService.getExpensesDBService(req.params.userId);
+  res.send({ status: true, data: expenses });
+};
 
 module.exports = {
   getDataControllerfn,
@@ -68,4 +99,6 @@ module.exports = {
   updateUserController,
   deleteUserController,
   loginUserControllerfn,
+  addExpenseController,
+  getExpensesController,
 };
