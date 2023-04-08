@@ -7,20 +7,31 @@
             <v-card-title>Login</v-card-title>
             <v-form @submit.prevent="login">
               <v-text-field
+                prepend-icon="mdi mdi-account-circle"
                 v-model="userName"
                 label="User Name"
                 type="text"
                 required
               ></v-text-field>
               <v-text-field
+                prepend-icon="mdi mdi-form-textbox-password"
                 v-model="password"
                 label="Password"
                 type="password"
                 required
               ></v-text-field>
-              <v-btn rounded outlined dark color="teal accent-4" type="submit"
-                >Login</v-btn
-              >
+              <div class="ml-auto d-flex justify-content-center">
+                <v-btn
+                  class="ml-auto mr-auto"
+                  text-center
+                  rounded
+                  outlined
+                  dark
+                  color="teal accent-4"
+                  type="submit"
+                  >Login</v-btn
+                >
+              </div>
             </v-form>
           </div>
         </v-col>

@@ -5,25 +5,42 @@
         >{{ loggedInUser.loggedInUser }}'s Expense Tracker
         Dashboard</v-card-title
       >
-      <v-card-text>
-        <!-- Form for adding new expenses -->
-        <v-form>
-          <v-text-field
-            v-model="newExpense.expenseName"
-            label="Name"
-          ></v-text-field>
-          <v-text-field
-            v-model="newExpense.expenseAmount"
-            label="Amount"
-          ></v-text-field>
+      <v-form>
+        <v-text-field
+          v-model="newExpense.expenseName"
+          label="Name"
+        ></v-text-field>
+        <v-text-field
+          v-model="newExpense.expenseAmount"
+          label="Amount"
+        ></v-text-field>
+        <v-menu
+          v-model="menu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="290px"
+        >
+          <template v-slot:activator="{ on }">
+            <v-text-field
+              v-model="newExpense.expenseDate"
+              label="Date"
+              prepend-icon="mdi-calendar"
+              readonly
+              v-on="on"
+            ></v-text-field>
+          </template>
           <v-date-picker
             v-model="newExpense.expenseDate"
-            label="Date"
+            no-title
+            scrollable
+            locale="en"
             format="YYYY-MM-DD"
           ></v-date-picker>
-          <v-btn color="primary" @click="addExpense">Add Expense</v-btn>
-        </v-form>
-      </v-card-text>
+        </v-menu>
+        <v-btn color="primary" @click="addExpense">Add Expense</v-btn>
+      </v-form>
     </v-card>
     <!-- Table for displaying existing expenses -->
     <v-simple-table>
