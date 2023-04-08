@@ -84,3 +84,36 @@ exports.getExpensesDBService = async (userId) => {
     throw error;
   }
 };
+exports.deleteExpenseDBService = async (userId, expenseId) => {
+  try {
+    const result = await userModel.findByIdAndUpdate(
+      userId,
+      {
+        $pull: {
+          expenses: { _id: expenseId },
+        },
+      },
+      { new: true }
+    );
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+exports.editExpenseDBService = async (userId, expenseId, expenseDetails) => {
+  try {
+    const result = await userModel.findOneAndUpdate(
+      { _id: userId, "expenses._id": expenseId },
+      {
+        $set: {
+          "expenses.$.name": expenseDetails.expenseName,
+          "expenses.$.amount": expenseDetails.expenseAmount,
+        },
+      },
+      { new: true }
+    );
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};

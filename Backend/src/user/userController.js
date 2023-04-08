@@ -92,6 +92,47 @@ const getExpensesController = async (req, res) => {
   const expenses = await userService.getExpensesDBService(req.params.userId);
   res.send({ status: true, data: expenses });
 };
+const deleteExpenseController = async (req, res) => {
+  const { id, expenseId } = req.params;
+
+  try {
+    const result = await userService.deleteExpenseDBService(id, expenseId);
+
+    if (result) {
+      res.send({ status: true, message: "Expense deleted successfully" });
+    } else {
+      res.send({ status: false, message: "Error deleting expense" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.send({ status: false, message: "Database error" });
+  }
+};
+const editExpenseController = async (req, res) => {
+  const { userId, expenseId } = req.params;
+  const { expenseName, expenseAmount } = req.body;
+
+  // Check that the request body is not empty
+  if (!expenseName || !expenseAmount) {
+    return res.send({ status: false, message: "Missing required fields" });
+  }
+
+  try {
+    const result = await userService.editExpenseDBService(userId, expenseId, {
+      expenseName: expenseName,
+      expenseAmount: expenseAmount,
+    });
+    res.send({
+      status: true,
+      message: "Expense updated successfully",
+      data: result,
+    });
+    console.log(result);
+  } catch (error) {
+    console.error(error);
+    res.send({ status: false, message: "Error updating expense" });
+  }
+};
 
 module.exports = {
   getDataControllerfn,
@@ -101,4 +142,6 @@ module.exports = {
   loginUserControllerfn,
   addExpenseController,
   getExpensesController,
+  deleteExpenseController,
+  editExpenseController,
 };
