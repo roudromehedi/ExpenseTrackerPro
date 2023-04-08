@@ -1,74 +1,109 @@
 <template>
   <div>
-    <v-card>
-      <v-card-title class="headline"
-        >{{ loggedInUser.loggedInUser }}'s Expense Tracker
-        Dashboard</v-card-title
-      >
-      <v-form>
-        <v-text-field
-          v-model="newExpense.expenseName"
-          label="Name"
-        ></v-text-field>
-        <v-text-field
-          v-model="newExpense.expenseAmount"
-          label="Amount"
-        ></v-text-field>
-        <v-menu
-          v-model="menu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="290px"
-        >
-          <template v-slot:activator="{ on }">
-            <v-text-field
-              v-model="newExpense.expenseDate"
-              label="Date"
-              prepend-icon="mdi-calendar"
-              readonly
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            v-model="newExpense.expenseDate"
-            no-title
-            scrollable
-            locale="en"
-            format="YYYY-MM-DD"
-          ></v-date-picker>
-        </v-menu>
-        <v-btn color="primary" @click="addExpense">Add Expense</v-btn>
-      </v-form>
-    </v-card>
-    <!-- Table for displaying existing expenses -->
-    <v-simple-table>
-      <template v-slot:default>
-        <thead>
-          <tr>
-            <th class="text-left">Name</th>
-            <th class="text-left">Amount</th>
-            <th class="text-left">Date</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(user, index) in expenses" :key="index">
-            <td>{{ user.name }}</td>
-            <td>{{ user.amount }}</td>
-            <td>{{ user.expenseDate }}</td>
+    <v-container class="fill-height mt-3" fluid>
+      <v-row align="center" justify="center">
+        <v-col cols="12" sm="8" md="8">
+          <v-card class="elevation-12 px-10 py-10"
+            ><div class="py-5">
+              <h2
+                class="text-center py-3 px-0 ml-auto mr-auto teal accent-4 white--text"
+              >
+                Dashboard
+              </h2>
+            </div>
 
-            <td class="text-right">
-              <v-btn color="warning" class="mr-2" @click="edit(user.id)">
-                Edit
-              </v-btn>
-              <v-btn color="error" @click="remove(user._id)">Delete</v-btn>
-            </td>
-          </tr>
-        </tbody>
-      </template>
-    </v-simple-table>
+            <v-card flat class="">
+              <v-card-title class="headline px-0"
+                >Hello {{ loggedInUser.loggedInUser }}!
+              </v-card-title>
+              <h5>Your total expense: {{ totalExpense.toFixed(2) }} €</h5>
+              <v-form>
+                <v-text-field
+                  prepend-icon="mdi mdi-subtitles-outline"
+                  v-model="newExpense.expenseName"
+                  label="Expense Title"
+                ></v-text-field>
+                <v-text-field
+                  prepend-icon="mdi mdi-cash-multiple"
+                  v-model="newExpense.expenseAmount"
+                  label="Amount"
+                ></v-text-field>
+                <v-menu
+                  v-model="menu"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      v-model="newExpense.expenseDate"
+                      label="Date"
+                      prepend-icon="mdi-calendar"
+                      readonly
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="newExpense.expenseDate"
+                    color="teal accent-4"
+                    scrollable
+                    locale="en"
+                    format="DD-MM-YYYY"
+                  ></v-date-picker>
+                </v-menu>
+                <v-btn
+                  class="ml-auto mr-auto"
+                  text-center
+                  mt-n5
+                  rounded
+                  color="teal accent-4"
+                  dark
+                  @click="addExpense"
+                  >Add Expense</v-btn
+                >
+              </v-form>
+            </v-card>
+            <!-- Table for displaying existing expenses -->
+            <div style="height: 300px; overflow-y: scroll">
+              <div style="position: relative">
+                <v-simple-table class="mt-5">
+                  <thead style="position: sticky; top: 0">
+                    <tr>
+                      <th class="text-left">Name</th>
+                      <th class="text-left">Amount</th>
+                      <th class="text-left">Date</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(user, index) in expenses" :key="index">
+                      <td>{{ user.name }}</td>
+                      <td>{{ user.amount.toFixed(2) }} €</td>
+                      <td>{{ user.expenseDate }}</td>
+                      <td class="text-right">
+                        <v-icon
+                          rounded
+                          color="warning"
+                          class="mr-2"
+                          @click="edit(user.id)"
+                        >
+                          mdi mdi-square-edit-outline
+                        </v-icon>
+                        <v-icon rounded color="error" @click="remove(user._id)"
+                          >mdi mdi-delete-circle</v-icon
+                        >
+                      </td>
+                    </tr>
+                  </tbody>
+                </v-simple-table>
+              </div>
+            </div>
+          </v-card></v-col
+        >
+      </v-row>
+    </v-container>
   </div>
 </template>
 
@@ -95,6 +130,11 @@ export default {
   }),
   created() {
     this.loadExpenses(this.userId);
+  },
+  computed: {
+    totalExpense() {
+      return this.expenses.reduce((acc, expense) => acc + expense.amount, 0);
+    },
   },
   methods: {
     formatDate(date) {
