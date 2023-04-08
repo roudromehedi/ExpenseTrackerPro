@@ -16,6 +16,11 @@
             v-model="newExpense.expenseAmount"
             label="Amount"
           ></v-text-field>
+          <v-date-picker
+            v-model="newExpense.expenseDate"
+            label="Date"
+            format="YYYY-MM-DD"
+          ></v-date-picker>
           <v-btn color="primary" @click="addExpense">Add Expense</v-btn>
         </v-form>
       </v-card-text>
@@ -27,6 +32,7 @@
           <tr>
             <th class="text-left">Name</th>
             <th class="text-left">Amount</th>
+            <th class="text-left">Date</th>
             <th></th>
           </tr>
         </thead>
@@ -34,6 +40,8 @@
           <tr v-for="(user, index) in expenses" :key="index">
             <td>{{ user.name }}</td>
             <td>{{ user.amount }}</td>
+            <td>{{ user.expenseDate }}</td>
+
             <td class="text-right">
               <v-btn color="warning" class="mr-2" @click="edit(user.id)">
                 Edit
@@ -48,6 +56,8 @@
 </template>
 
 <script>
+import { format } from "date-fns";
+
 import axios from "axios";
 export default {
   data: () => ({
@@ -60,15 +70,19 @@ export default {
       userId: "",
       expenseName: "",
       expenseAmount: "",
+      expenseDate: null,
     },
     loggedInUser: "", // new data property
     userId: "",
     selectedExpense: null,
   }),
   created() {
-    this.loadExpenses();
+    this.loadExpenses(this.userId);
   },
   methods: {
+    formatDate(date) {
+      return format(new Date(date), "yyyy-MM-dd");
+    },
     async addExpense() {
       try {
         if (this.selectedExpense !== null) {
@@ -83,6 +97,7 @@ export default {
               body: JSON.stringify({
                 expenseName: this.newExpense.expenseName,
                 expenseAmount: this.newExpense.expenseAmount,
+                expenseDate: this.newExpense.expenseDate,
               }),
             }
           );
@@ -98,10 +113,12 @@ export default {
               this.expenses[index].expenseName = this.newExpense.expenseName;
               this.expenses[index].expenseAmount =
                 this.newExpense.expenseAmount;
+              this.expenses[index].expenseDate = this.newExpense.expenseDate;
             }
             // Clear form fields and selected expense
             this.newExpense.expenseName = "";
             this.newExpense.expenseAmount = "";
+            this.newExpense.expenseDate = "";
             this.selectedExpense = null;
           } else {
             alert(result.message);
@@ -118,6 +135,7 @@ export default {
               body: JSON.stringify({
                 expenseName: this.newExpense.expenseName,
                 expenseAmount: this.newExpense.expenseAmount,
+                expenseDate: this.newExpense.expenseDate,
                 userId: this.userId,
               }),
             }
@@ -139,15 +157,17 @@ export default {
         console.error(error);
         alert("Error adding or updating expense");
       }
+      console.log("Date:", this.newExpense.expenseDate);
       this.loadExpenses();
     },
 
     loadExpenses() {
-      this.expenses = this.loggedInUser.loggedInUserExpenses;
-      this.loggedInUser = this.$route.query;
-      this.userId = this.loggedInUser.loggedInUserId;
-      this.expenses = this.loggedInUser.loggedInUserExpenses;
-      console.log(this.expenses);
+      var url = `http://localhost:8000/user/${this.userId}/expenses`;
+      axios.get(url).then(({ data }) => {
+        console.log("Loded Expenses", data);
+        this.expenses = data.data;
+        console.log("Page data", url);
+      });
     },
 
     remove(expense) {
@@ -162,6 +182,11 @@ export default {
     },
   },
   mounted() {
+    this.loggedInUser = this.$route.query;
+    this.userId = this.loggedInUser.loggedInUserId;
+    //this.expenses = this.loggedInUser.loggedInUserExpenses;
+    console.log(this.expenses);
+    this.loadExpenses(this.userId);
     // Fetch user's expenses
   },
 };

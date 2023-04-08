@@ -18,7 +18,25 @@
               <v-text-field
                 v-model="user.password"
                 label="Password"
-                :rules="[(v) => !!v || 'Address is required']"
+                :rules="[(v) => !!v || 'Password is required']"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="user.firstName"
+                label="First Name"
+                :rules="[(v) => !!v || 'First name is required']"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="user.lastName"
+                label="Last Name"
+                :rules="[(v) => !!v || 'Last name is required']"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="user.age"
+                label="Age"
+                :rules="[(v) => !!v || 'Age is required']"
                 required
               ></v-text-field>
 
@@ -74,6 +92,9 @@ export default {
         _id: "",
         userName: "",
         password: "",
+        firstName: "",
+        lastName: "",
+        age: "",
       },
     };
   },

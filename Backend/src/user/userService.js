@@ -14,6 +14,9 @@ exports.createUserDBService = async (userDetails) => {
     const userModelData = new userModel({
       userName: userDetails.userName,
       password: userDetails.password,
+      firstName: userDetails.firstName,
+      lastName: userDetails.lastName,
+      age: userDetails.age,
     });
     await userModelData.save();
     return true;
@@ -55,6 +58,9 @@ exports.addExpenseDBService = async (userId, expenseDetails) => {
   try {
     console.log("userId:", userId);
     console.log("expenseDetails:", expenseDetails);
+    const expenseDate = new Date(expenseDetails.expenseDate)
+      .toISOString()
+      .slice(0, 10);
     const result = await userModel.findByIdAndUpdate(
       userId,
       {
@@ -62,6 +68,7 @@ exports.addExpenseDBService = async (userId, expenseDetails) => {
           expenses: {
             name: expenseDetails.expenseName,
             amount: expenseDetails.expenseAmount,
+            expenseDate: expenseDate,
           },
         },
       },
@@ -74,12 +81,13 @@ exports.addExpenseDBService = async (userId, expenseDetails) => {
     throw error;
   }
 };
+
 exports.getExpensesDBService = async (userId) => {
   try {
     console.log("userId:", userId);
     const user = await userModel.findById(userId);
     console.log("Expenses", user.expenses);
-    return user.expenses;
+    return user;
   } catch (error) {
     throw error;
   }
@@ -113,6 +121,25 @@ exports.editExpenseDBService = async (userId, expenseId, expenseDetails) => {
       { new: true }
     );
     return result;
+  } catch (error) {
+    throw error;
+  }
+};
+exports.getExpensesDBService = async (userId) => {
+  try {
+    console.log("userId:", userId);
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (!user.expenses) {
+      user.expenses = [];
+    }
+
+    console.log("Expenses", user.expenses);
+    return user.expenses;
   } catch (error) {
     throw error;
   }

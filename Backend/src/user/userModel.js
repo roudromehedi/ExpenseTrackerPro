@@ -10,6 +10,7 @@ var expenseSchema = new Schema({
     type: Number,
     required: true,
   },
+  expenseDate: { type: String },
 });
 
 var userSchema = new Schema({
@@ -21,6 +22,19 @@ var userSchema = new Schema({
     type: String,
     required: true,
   },
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  age: {
+    type: String,
+    required: true,
+  },
+
   expenses: [expenseSchema],
 });
 

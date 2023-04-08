@@ -64,7 +64,8 @@ const deleteUserController = async (req, res) => {
   }
 };
 const addExpenseController = async (req, res) => {
-  const { userId, expenseName, expenseAmount } = req.body;
+  const { userId, expenseName, expenseAmount, expenseDate } = req.body;
+  console.log("Date", expenseDate);
 
   // Check that the request body is not empty
   if (!expenseName || !expenseAmount) {
@@ -72,9 +73,16 @@ const addExpenseController = async (req, res) => {
   }
 
   try {
+    // Create a new Date object and pass in the expenseDate as a parameter
+    const expenseDateTime = new Date(expenseDate);
+
+    // Use the toLocaleString() method to convert the date to a localized string
+    const modifiedExpenseDate = expenseDateTime.toLocaleString();
+
     const result = await userService.addExpenseDBService(userId, {
       expenseName: expenseName,
       expenseAmount: expenseAmount,
+      expenseDate: modifiedExpenseDate,
     });
     res.send({
       status: true,
@@ -89,11 +97,28 @@ const addExpenseController = async (req, res) => {
 };
 
 const getExpensesController = async (req, res) => {
-  const expenses = await userService.getExpensesDBService(req.params.userId);
-  res.send({ status: true, data: expenses });
+  const { id } = req.params;
+  console.log("controller user ID", this.id);
+  try {
+    const result = await userService.getExpensesDBService(id);
+    if (result) {
+      res.send({
+        status: true,
+        data: result,
+        message: "Expense get successfully",
+      });
+    } else {
+      res.send({ status: false, message: "Error get expense" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.send({ status: false, message: "Database error" });
+  }
 };
+
 const deleteExpenseController = async (req, res) => {
   const { id, expenseId } = req.params;
+  console.log("delete id", this.id);
 
   try {
     const result = await userService.deleteExpenseDBService(id, expenseId);
