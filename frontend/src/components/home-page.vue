@@ -162,7 +162,7 @@ export default {
 
   methods: {
     UserLoad() {
-      var page = "http://localhost:8000/user/getAll";
+      var page = "https://expensetrackerpro3.onrender.com/user/getAll";
       axios.get(page).then(({ data }) => {
         console.log(data);
         this.result = data.data;
@@ -183,17 +183,20 @@ export default {
         return;
       }
 
-      axios.post("http://localhost:8000/user/create", this.user).then(() => {
-        alert("Registration successful!");
-        this.UserLoad();
-      });
+      axios
+        .post("https://expensetrackerpro3.onrender.com/user/create", this.user)
+        .then(() => {
+          alert("Registration successful!");
+          this.UserLoad();
+        });
     },
 
     edit(user) {
       this.user = user;
     },
     updateData() {
-      var editrecords = "http://localhost:8000/user/update/" + this.user._id;
+      var editrecords =
+        "https://expensetrackerpro3.onrender.com/user/update/" + this.user._id;
       axios.patch(editrecords, this.user).then(() => {
         this.user.name = "";
         (this.user.address = ""), (this.user.phone = "");
@@ -204,7 +207,7 @@ export default {
     },
 
     remove(user) {
-      var url = `http://localhost:8000/user/delete/${user._id}`;
+      var url = `https://expensetrackerpro3.onrender.com/user/delete/${user._id}`;
       axios.delete(url);
       alert("Deleteddd");
       this.UserLoad();
@@ -215,10 +218,13 @@ export default {
   },
   async login() {
     try {
-      const response = await axios.post("http://localhost:8000/user/login", {
-        userName: this.loginData.userName,
-        password: this.loginData.password,
-      });
+      const response = await axios.post(
+        "https://expensetrackerpro3.onrender.com/user/login",
+        {
+          userName: this.loginData.userName,
+          password: this.loginData.password,
+        }
+      );
       // Handle successful login response
       console.log("Logged in user:", response.data);
       // Redirect to the dashboard page

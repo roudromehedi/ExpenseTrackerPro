@@ -2,7 +2,7 @@
   <div class="login-container">
     <v-card class="login-card py-0 px-0 elevation-12">
       <v-row>
-        <v-col sm="7" class="white"
+        <v-col sm="8" md="8" class="white"
           ><div class="px-5 py-5">
             <v-card-title>Login</v-card-title>
             <v-form @submit.prevent="login">
@@ -69,10 +69,13 @@ export default {
     },
     async login() {
       try {
-        const response = await axios.post("http://localhost:8000/user/login", {
-          userName: this.userName,
-          password: this.password,
-        });
+        const response = await axios.post(
+          "https://expensetrackerpro3.onrender.com/user/login",
+          {
+            userName: this.userName,
+            password: this.password,
+          }
+        );
 
         // Handle successful login response
         console.log("Logged in user:", response.data);

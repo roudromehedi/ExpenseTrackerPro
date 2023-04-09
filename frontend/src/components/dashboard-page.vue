@@ -153,7 +153,7 @@ export default {
         if (this.selectedExpense !== null) {
           // Make API call to update expense
           const response = await fetch(
-            `http://localhost:8000/user/${this.userId}/editExpense/${this.selectedExpense._id}`,
+            `https://expensetrackerpro3.onrender.com/user/${this.userId}/editExpense/${this.selectedExpense._id}`,
             {
               method: "PUT",
               headers: {
@@ -191,7 +191,7 @@ export default {
         } else {
           // Make API call to add expense
           const response = await fetch(
-            `http://localhost:8000/user/${this.userId}/addExpense`,
+            `https://expensetrackerpro3.onrender.com/user/${this.userId}/addExpense`,
             {
               method: "POST",
               headers: {
@@ -227,7 +227,7 @@ export default {
     },
 
     loadExpenses() {
-      var url = `http://localhost:8000/user/${this.userId}/expenses`;
+      var url = `https://expensetrackerpro3.onrender.com/user/${this.userId}/expenses`;
       axios.get(url).then(({ data }) => {
         console.log("Loded Expenses", data);
         this.expenses = data.data;
@@ -236,7 +236,7 @@ export default {
     },
 
     remove(expense) {
-      var url = `http://localhost:8000/user/${this.userId}/deleteExpense/${expense}`;
+      var url = `https://expensetrackerpro3.onrender.com/user/${this.userId}/deleteExpense/${expense}`;
       axios.delete(url);
       alert("Deleteddd");
       this.loadExpenses();
