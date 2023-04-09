@@ -22,7 +22,13 @@
 
             <v-card flat class="">
               <v-card-title class="headline px-0"
-                >Hello {{ loggedInUser.loggedInUser }}!
+                >Hello,
+                {{
+                  loggedInUser.loggedInUserFirstName +
+                  " " +
+                  loggedInUser.loggedInUserLastName
+                }}
+                !
               </v-card-title>
               <h5>Your total expense: {{ totalExpense.toFixed(2) }} €</h5>
               <v-form>
@@ -90,18 +96,23 @@
                       <td>{{ user.name }}</td>
                       <td>{{ user.amount.toFixed(2) }} €</td>
                       <td>{{ user.expenseDate }}</td>
-                      <td class="text-right">
-                        <v-icon
-                          rounded
-                          color="warning"
-                          class="mr-2"
-                          @click="edit(user.id)"
-                        >
-                          mdi mdi-square-edit-outline
-                        </v-icon>
-                        <v-icon rounded color="error" @click="remove(user._id)"
-                          >mdi mdi-delete-circle</v-icon
-                        >
+                      <td class="d-flex">
+                        <div class="ml-auto d-flex">
+                          <v-icon
+                            rounded
+                            color="warning"
+                            class="mr-2"
+                            @click="edit(user.id)"
+                          >
+                            mdi mdi-square-edit-outline
+                          </v-icon>
+                          <v-icon
+                            rounded
+                            color="error"
+                            @click="remove(user._id)"
+                            >mdi mdi-delete-circle</v-icon
+                          >
+                        </div>
                       </td>
                     </tr>
                   </tbody>

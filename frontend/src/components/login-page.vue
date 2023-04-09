@@ -85,6 +85,8 @@ export default {
           path: "/dashboard",
           query: {
             loggedInUser: response.data.userName,
+            loggedInUserFirstName: response.data.firstName,
+            loggedInUserLastName: response.data.lastName,
             loggedInUserId: response.data.userId,
             loggedInUserExpenses: response.data.expenses,
           },
