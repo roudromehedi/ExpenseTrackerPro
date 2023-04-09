@@ -18,6 +18,9 @@ const loginUserControllerfn = async (req, res) => {
         message: "Login successful",
         userId: user._id,
         userName: user.userName,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        age: user.age,
         password: user.password,
         expenses: user.expenses,
       });
