@@ -3,10 +3,14 @@ var server = express();
 var routes = require("./routes/routes");
 var mongoose = require("mongoose");
 const cors = require("cors");
-mongoose.connect("mongodb://localhost:27017/est", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const port = process.env.PORT || 8000;
+mongoose.connect(
+  "mongodb+srv://roudro:Roudro%40114727@cluster0.eibxm4x.mongodb.net/expenseTracker",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 // Get the default connection
 const db = mongoose.connection;
@@ -23,7 +27,7 @@ server.use(cors());
 server.use(express.json());
 server.use(routes);
 
-server.listen(8000, function check(error) {
+server.listen(port, function check(error) {
   if (error) {
     console.log("errorr");
   } else {

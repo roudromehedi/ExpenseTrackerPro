@@ -4,10 +4,18 @@
       <v-row align="center" justify="center">
         <v-col cols="12" sm="8" md="8">
           <v-card class="elevation-12 px-10 py-10"
-            ><div class="py-5">
-              <h2
-                class="text-center py-3 px-0 ml-auto mr-auto teal accent-4 white--text"
-              >
+            ><div class="py-5 d-flex teal accent-4">
+              <img
+                src="./logo.png"
+                alt="Logo"
+                style="
+                  display: block;
+                  margin: 0 auto;
+                  width: 50px;
+                  height: 50px;
+                "
+              />
+              <h2 class="text-center py-3 px-0 ml-auto mr-auto white--text">
                 Dashboard
               </h2>
             </div>
