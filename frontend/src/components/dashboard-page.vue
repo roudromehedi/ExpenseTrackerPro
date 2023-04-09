@@ -92,7 +92,10 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(user, index) in expenses" :key="index">
+                    <tr
+                      v-for="(user, index) in expensesSortedByDate"
+                      :key="index"
+                    >
                       <td>{{ user.name }}</td>
                       <td>{{ user.amount.toFixed(2) }} €</td>
                       <td>{{ user.expenseDate }}</td>
@@ -153,6 +156,12 @@ export default {
   computed: {
     totalExpense() {
       return this.expenses.reduce((acc, expense) => acc + expense.amount, 0);
+    },
+    expensesSortedByDate() {
+      const sortedExpenses = [...this.expenses].sort(
+        (a, b) => new Date(a.expenseDate) - new Date(b.expenseDate)
+      );
+      return sortedExpenses;
     },
   },
   methods: {
